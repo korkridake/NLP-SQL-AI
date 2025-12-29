@@ -6,12 +6,13 @@ Power BI semantic model data don't support adding sample query/question pairs at
 
 ## Golden Dataset
 
-| Question (Prompt)                                  | Expected SQL Query                                                                     | Expected Output |
-|----------------------------------------------------|----------------------------------------------------------------------------------------|-----------------|
-| How many green taxi trips that took place in 2019? | SELECT COUNT(*) AS total_green_taxi_trips_2019 FROM [year_2019].[green_tripdata_2019]; | 13              |
-| A2                                                 | B2                                                                                     | C2              |
-| A3                                                 | B3                                                                                     | C3              |
+Based on the Factory team's best practices, we recommend preparing at least 30 SQL pairs that include natural language questions and corresponding SQL queries to effectively guide the agent's responses.
 
+| Question (Prompt)                                  | Expected SQL Query                                                                                                                           | Expected Output |
+|----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| How many green taxi trips that took place in 2019? | SELECT COUNT(*) AS total_green_taxi_trips_2019 FROM [year_2019].[green_tripdata_2019];                                                       | 13              |
+| What percentage of trips include a tip in 2021?    | SELECT COUNT(CASE WHEN tip_amount > 0 THEN 1 END) * 100.0 / COUNT(*) AS pct_tipped FROM [year_2021].[green_tripdata_2021];                   | B2              |
+| What are the longest trips by distance in 2022?    | SELECT TOP 10 trip_distance, lpep_pickup_datetime, lpep_dropoff_datetime FROM [year_2022].[green_tripdata_2022] ORDER BY trip_distance DESC; | C3              |
 
 
 # Additional Resources
