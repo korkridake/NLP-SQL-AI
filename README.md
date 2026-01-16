@@ -1,6 +1,6 @@
 # Enterprise-Grade Natural Language to SQL Generation using LLMs (NL2SQL)
 
-![relationship](media\guerrillabuzz-7hA2wqBcSF8-unsplash.jpg)
+![relationship](media/guerrillabuzz-7hA2wqBcSF8-unsplash.jpg)
 
 Photo by <a href="https://unsplash.com/@guerrillabuzz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">GuerrillaBuzz</a> on <a href="https://unsplash.com/photos/diagram-7hA2wqBcSF8?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 
