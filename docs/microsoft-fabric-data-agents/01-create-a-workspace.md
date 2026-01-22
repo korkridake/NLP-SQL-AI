@@ -3,6 +3,7 @@
   - [Before you start](#before-you-start)
   - [Exercise scenario](#exercise-scenario)
   - [Create a workspace](#create-a-workspace)
+  - [Addtional Resources](#addtional-resources)
 
 # Chat with your data using Microsoft Fabric data agents
 
@@ -46,3 +47,9 @@ Before working with data in Fabric, create a workspace with Fabric enabled. A wo
 4. When your new workspace opens, it should be empty.
 
 ![workspace](../../media/lab-01-create-a-workspace.png)
+
+## Addtional Resources
+
+- [Enable Copilot in Fabric - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/fundamentals/copilot-enable-fabric)
+- [Fabric data agent scenario (preview) - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-end-to-end-tutorial)
+- [Understand Microsoft Fabric Licenses - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/enterprise/licenses#capacity)

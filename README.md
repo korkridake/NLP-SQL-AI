@@ -13,6 +13,13 @@ The Natural Language to SQL project leverages Azure Generative AI to automatical
 * **Natural Language Ambiguity**: Human language is inherently ambiguous and context-dependent. Disambiguating user queries and understanding the intended meaning is necessary to generate accurate SQL statements.
 * **Dynamic Schemas**: Adapting to evolving database schemas without much challenge is crucial.
 
+You learn how to:
+
+* Design and configure Fabric data agents that enable secure conversational access to enterprise data.
+* Curate and optimize data sources, instructions, and example queries for accurate and relevant responses.
+* Publish, operationalize, and integrate Fabric data agents with downstream experiences like Microsoft Foundry, Power BI, and custom apps.
+* Apply governance, permission, and prompting best practices that improve reliability and safeguard data.
+
 # Technology Plan for AI Agents
 
 It's critical to understand how to select the right technology platform for each of your potential agent use cases. It covers adopting a ready-to-use SaaS agent or building a custom agent with Microsoft Foundry (PaaS) or Microsoft Copilot Studio (SaaS). Effective technology adoption aligns goals with cost, level of effort, and customization needs. This alignment matches the technology to the use case and balances the effort required to achieve a return on investment. Understanding the available landscape ensures the right choice between adopting a ready-to-use SaaS agent or building a custom solution to provide business advantage.

@@ -34,4 +34,12 @@ We will create a sales data warehouse, load some data into it and then create a 
 
 ## Create a Fabric Data Agent
 
+A Fabric data agent is an AI-powered assistant that can understand natural language questions about your data and automatically generate the appropriate queries to answer them. This eliminates the need for users to know SQL, KQL or DAX syntax while still providing accurate, data-driven insights. Let’s create and configure our data agent:
+
+Create a new **Fabric Data Agent**.
+
+![copilot-fabric-data-agent-new](../../media/lab-03-copilot-fabric-data-agent-new.png)
+
+
+
 This section is currently being developed.
