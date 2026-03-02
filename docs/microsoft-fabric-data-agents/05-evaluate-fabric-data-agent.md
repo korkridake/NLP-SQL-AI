@@ -3,6 +3,7 @@
   - [Before you start](#before-you-start)
   - [Exercise scenario](#exercise-scenario)
   - [Evaluate a Fabric Data Agent](#evaluate-a-fabric-data-agent)
+  - [Additional Resources](#additional-resources)
 
 
 # Chat with your data using Microsoft Fabric data agents
@@ -34,4 +35,12 @@ We will create a sales data warehouse, load some data into it and then create a 
 
 ## Evaluate a Fabric Data Agent
 
+Evaluation with the Fabric SDK allows you to programmatically test how well your Data Agent responds to natural language questions. Using a simple Python interface, you can define ground truth examples, run evaluations, and analyze results—all within your notebook environment. This helps you validate accuracy, debug errors, and confidently improve your agent before deploying it to production.
+
 This section is currently being developed.
+
+## Additional Resources
+
+1. [Evaluate your data agent - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/data-science/evaluate-data-agent)
+2. [Natural Language to SQL Architecture](https://techcommunity.microsoft.com/blog/azurearchitectureblog/nl-to-sql-architecture-alternatives/4136387)
+3. [SQL - Ragas](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/sql/#datacompy-score)
