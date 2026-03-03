@@ -150,3 +150,4 @@ ORDER BY trip_distance DESC;
 
 1. [NYC Taxi and Limousine green dataset - Azure Open Datasets | Microsoft Learn](https://learn.microsoft.com/en-us/azure/open-datasets/dataset-taxi-green?tabs=azureml-opendatasets)
 2. [Explore data analytics in Microsoft Fabric | DP-900T00A-Azure-Data-Fundamentals](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-04b-fabric-lake-lab.html#background-on-the-nyc-taxi-dataset)
+3. [Chat with your data using Microsoft Fabric data agents | mslearn-fabric](https://microsoftlearning.github.io/mslearn-fabric/Instructions/Labs/22d-copilot-fabric-data-agents.html#create-a-workspace)

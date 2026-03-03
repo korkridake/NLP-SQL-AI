@@ -3,6 +3,7 @@
   - [Before you start](#before-you-start)
   - [Exercise scenario](#exercise-scenario)
   - [Create a Fabric Data Agent](#create-a-fabric-data-agent)
+  - [Addtional Resources](#addtional-resources)
 
 
 # Chat with your data using Microsoft Fabric data agents
@@ -34,12 +35,24 @@ We will create a sales data warehouse, load some data into it and then create a 
 
 ## Create a Fabric Data Agent
 
-A Fabric data agent is an AI-powered assistant that can understand natural language questions about your data and automatically generate the appropriate queries to answer them. This eliminates the need for users to know SQL, KQL or DAX syntax while still providing accurate, data-driven insights. Let’s create and configure our data agent:
-
-Create a new **Fabric Data Agent**.
+A Fabric data agent is an AI-powered assistant that can understand natural language questions about your data and automatically generate the appropriate queries to answer them. This eliminates the need for users to know SQL, KQL or DAX syntax while still providing accurate, data-driven insights. To create a new Fabric data agent, first navigate to your workspace, and then select the + New Item button. In the All items tab, search for Fabric data agent to locate the appropriate option, as shown in this screenshot:
 
 ![copilot-fabric-data-agent-new](../../media/lab-03-copilot-fabric-data-agent-new.png)
 
+Once selected, you're prompted to provide a name for your Fabric data agent. Give it a name like `nl2sqltaxi`:
 
+![copilot-fabric-data-agent-creation](../../media/lab-03-copilot-fabric-data-agent-creation.png)
 
-This section is currently being developed.
+Refer to the provided screenshot for a visual guide on naming the Fabric data agent. After entering the name, proceed with the configuration to align the Fabric data agent with your specific requirements.
+
+Select Add a data source.
+
+![copilot-fabric-data-agent-created](../../media/lab-03-copilot-fabric-data-agent-created.png)
+
+Choose the data warehouse you created earlier (NYC Taxi) and select the tables you want to include in the data agent's knowledge base. For this lab, select all the tables in the data warehouse.
+
+> **Connecting to your data**: The data agent needs access to your tables to understand the schema and relationships. This allows it to generate accurate SQL queries based on your questions.
+
+## Addtional Resources
+
+1. [Create a Fabric data agent - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/data-science/how-to-create-data-agent)
