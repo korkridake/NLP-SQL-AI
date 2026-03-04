@@ -8,6 +8,30 @@
     - [Example](#example)
   - [Examples for Fabric Data Agents Guidance](#examples-for-fabric-data-agents-guidance)
     - [Golden Dataset](#golden-dataset)
+- [📈 1. Revenue Concentration \& Pareto Analysis](#-1-revenue-concentration--pareto-analysis)
+    - [❓ Executive Question:](#-executive-question)
+- [💰 2. Revenue Per Zone Contribution](#-2-revenue-per-zone-contribution)
+    - [❓ Executive Question:](#-executive-question-1)
+- [🚕 3. Profitability Per Mile by Time of Day](#-3-profitability-per-mile-by-time-of-day)
+    - [❓ Executive Question:](#-executive-question-2)
+- [📊 4. High-Value Customer Behavior (Proxy via Tip Rate)](#-4-high-value-customer-behavior-proxy-via-tip-rate)
+    - [❓ Executive Question:](#-executive-question-3)
+- [📆 5. Weekday vs Weekend Performance](#-5-weekday-vs-weekend-performance)
+    - [❓ Executive Question:](#-executive-question-4)
+- [🔥 6. Peak Congestion Impact](#-6-peak-congestion-impact)
+    - [❓ Executive Question:](#-executive-question-5)
+- [📉 7. Revenue Volatility Analysis](#-7-revenue-volatility-analysis)
+    - [❓ Executive Question:](#-executive-question-6)
+- [🏆 8. Top Revenue Routes (Weighted by Profitability)](#-8-top-revenue-routes-weighted-by-profitability)
+    - [❓ Executive Question:](#-executive-question-7)
+- [📦 9. Customer Spend Distribution (Percentiles)](#-9-customer-spend-distribution-percentiles)
+    - [❓ Executive Question:](#-executive-question-8)
+- [🚦 10. Driver Productivity Proxy (Trips per Active Hour)](#-10-driver-productivity-proxy-trips-per-active-hour)
+    - [❓ Executive Question:](#-executive-question-9)
+- [🧠 11. Cannibalization Risk Analysis](#-11-cannibalization-risk-analysis)
+    - [❓ Executive Question:](#-executive-question-10)
+- [📈 12. Long-Term Trend \& Seasonality](#-12-long-term-trend--seasonality)
+    - [❓ Executive Question:](#-executive-question-11)
   - [Additional Resources](#additional-resources)
 
 
@@ -90,10 +114,268 @@ Based on the Factory team's best practices, we recommend preparing at least 30 S
 
 | Question (Prompt)                                  | Expected SQL Query                                                                                                                           | Expected Output |
 |----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| How many green taxi trips that took place in 2019? | SELECT COUNT(*) AS total_green_taxi_trips_2019 FROM [year_2019].[green_tripdata_2019];                                                       | 13              |
-| What percentage of trips include a tip in 2021?    | SELECT COUNT(CASE WHEN tip_amount > 0 THEN 1 END) * 100.0 / COUNT(*) AS pct_tipped FROM [year_2021].[green_tripdata_2021];                   | B2              |
-| What are the longest trips by distance in 2022?    | SELECT TOP 10 trip_distance, lpep_pickup_datetime, lpep_dropoff_datetime FROM [year_2022].[green_tripdata_2022] ORDER BY trip_distance DESC; | C3              |
+| How many green taxi trips that took place in 2019? | SELECT COUNT(*) AS total_green_taxi_trips_2019 FROM [year_2019].[green_tripdata_2019];                                                       | 6,300,814              |
+| What percentage of trips include a tip in 2021?    | SELECT COUNT(CASE WHEN tip_amount > 0 THEN 1 END) * 100.0 / COUNT(*) AS pct_tipped FROM [year_2021].[green_tripdata_2021];                   | 34.430711621000              |
+| What are the longest trips by distance in 2022?    | SELECT TOP 1 trip_distance, lpep_pickup_datetime, lpep_dropoff_datetime FROM [year_2022].[green_tripdata_2022] ORDER BY trip_distance DESC; | 360068.14	          |
+| Which drop-off zones generate the highest revenue? | SELECT DOLocationID, SUM(total_amount) AS total_revenue FROM [year_2019].[green_tripdata_2019] GROUP BY DOLocationID ORDER BY total_revenue DESC; |  74            |
 
+# 📈 1. Revenue Concentration & Pareto Analysis
+
+### ❓ Executive Question:
+
+**What percentage of total revenue comes from the top 10% highest-grossing trips?**
+
+```sql
+WITH ranked_trips AS (
+    SELECT total_amount,
+           NTILE(10) OVER (ORDER BY total_amount DESC) AS revenue_decile
+    FROM nyc_taxi
+)
+SELECT 
+    SUM(CASE WHEN revenue_decile = 1 THEN total_amount END) 
+        / SUM(total_amount) * 100 AS pct_revenue_top_10_percent
+FROM ranked_trips;
+```
+
+👉 Shows revenue concentration risk.
+
+---
+
+# 💰 2. Revenue Per Zone Contribution
+
+### ❓ Executive Question:
+
+**Which pickup zones contribute most to total company revenue, and what is their cumulative contribution?**
+
+```sql
+WITH zone_revenue AS (
+    SELECT PULocationID,
+           SUM(total_amount) AS revenue
+    FROM nyc_taxi
+    GROUP BY PULocationID
+),
+ranked AS (
+    SELECT *,
+           SUM(revenue) OVER (ORDER BY revenue DESC) AS cumulative_revenue,
+           SUM(revenue) OVER () AS total_revenue
+    FROM zone_revenue
+)
+SELECT PULocationID,
+       revenue,
+       cumulative_revenue / total_revenue * 100 AS cumulative_pct
+FROM ranked
+ORDER BY revenue DESC;
+```
+
+👉 Identifies geographic dependency.
+
+---
+
+# 🚕 3. Profitability Per Mile by Time of Day
+
+### ❓ Executive Question:
+
+**During which hours are trips most profitable per mile?**
+
+```sql
+SELECT EXTRACT(HOUR FROM lpep_pickup_datetime) AS hour,
+       AVG(total_amount / NULLIF(trip_distance, 0)) AS avg_revenue_per_mile
+FROM nyc_taxi
+GROUP BY hour
+ORDER BY avg_revenue_per_mile DESC;
+```
+
+👉 Supports surge pricing or driver allocation strategy.
+
+---
+
+# 📊 4. High-Value Customer Behavior (Proxy via Tip Rate)
+
+### ❓ Executive Question:
+
+**Do longer trips result in higher tip percentages?**
+
+```sql
+SELECT 
+    CASE 
+        WHEN trip_distance < 2 THEN 'Short (<2mi)'
+        WHEN trip_distance < 5 THEN 'Medium (2-5mi)'
+        ELSE 'Long (>5mi)'
+    END AS distance_bucket,
+    AVG(tip_amount / NULLIF(fare_amount, 0)) * 100 AS avg_tip_pct
+FROM nyc_taxi
+GROUP BY distance_bucket;
+```
+
+👉 Helps optimize pricing tiers.
+
+---
+
+# 📆 5. Weekday vs Weekend Performance
+
+### ❓ Executive Question:
+
+**How does revenue and trip volume differ between weekdays and weekends?**
+
+```sql
+SELECT 
+    CASE 
+        WHEN EXTRACT(DOW FROM lpep_pickup_datetime) IN (0,6) 
+        THEN 'Weekend'
+        ELSE 'Weekday'
+    END AS day_type,
+    COUNT(*) AS trip_count,
+    SUM(total_amount) AS total_revenue,
+    AVG(total_amount) AS avg_revenue_per_trip
+FROM nyc_taxi
+GROUP BY day_type;
+```
+
+👉 Operational staffing optimization.
+
+---
+
+# 🔥 6. Peak Congestion Impact
+
+### ❓ Executive Question:
+
+**What percentage of total revenue comes from congestion surcharges?**
+
+```sql
+SELECT 
+    SUM(congestion_surcharge) AS total_congestion_fees,
+    SUM(congestion_surcharge) / SUM(total_amount) * 100 AS pct_of_total_revenue
+FROM nyc_taxi;
+```
+
+👉 Regulatory dependency exposure.
+
+---
+
+# 📉 7. Revenue Volatility Analysis
+
+### ❓ Executive Question:
+
+**What is the day-to-day revenue growth rate?**
+
+```sql
+WITH daily_revenue AS (
+    SELECT DATE(lpep_pickup_datetime) AS trip_date,
+           SUM(total_amount) AS revenue
+    FROM nyc_taxi
+    GROUP BY trip_date
+)
+SELECT trip_date,
+       revenue,
+       (revenue - LAG(revenue) OVER (ORDER BY trip_date)) 
+           / LAG(revenue) OVER (ORDER BY trip_date) * 100 
+           AS daily_growth_pct
+FROM daily_revenue
+ORDER BY trip_date;
+```
+
+👉 Detects sudden drops or spikes.
+
+---
+
+# 🏆 8. Top Revenue Routes (Weighted by Profitability)
+
+### ❓ Executive Question:
+
+**Which routes generate the highest average revenue per trip and have meaningful volume?**
+
+```sql
+SELECT PULocationID,
+       DOLocationID,
+       COUNT(*) AS trip_count,
+       AVG(total_amount) AS avg_revenue,
+       SUM(total_amount) AS total_revenue
+FROM nyc_taxi
+GROUP BY PULocationID, DOLocationID
+HAVING COUNT(*) > 100
+ORDER BY avg_revenue DESC
+LIMIT 10;
+```
+
+👉 Strategic route targeting.
+
+---
+
+# 📦 9. Customer Spend Distribution (Percentiles)
+
+### ❓ Executive Question:
+
+**What are the 50th, 75th, and 95th percentile trip revenues?**
+
+(PostgreSQL)
+
+```sql
+SELECT
+    PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY total_amount) AS p50,
+    PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY total_amount) AS p75,
+    PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY total_amount) AS p95
+FROM nyc_taxi;
+```
+
+👉 Pricing segmentation insight.
+
+---
+
+# 🚦 10. Driver Productivity Proxy (Trips per Active Hour)
+
+### ❓ Executive Question:
+
+**What is the average number of trips per active hour?**
+
+```sql
+WITH hourly_trips AS (
+    SELECT DATE_TRUNC('hour', lpep_pickup_datetime) AS hour,
+           COUNT(*) AS trips
+    FROM nyc_taxi
+    GROUP BY hour
+)
+SELECT AVG(trips) AS avg_trips_per_hour
+FROM hourly_trips;
+```
+
+👉 Supply-demand balance.
+
+---
+
+# 🧠 11. Cannibalization Risk Analysis
+
+### ❓ Executive Question:
+
+**Are short trips disproportionately contributing to congestion but low revenue?**
+
+```sql
+SELECT 
+    COUNT(*) FILTER (WHERE trip_distance < 1) * 100.0 / COUNT(*) 
+        AS pct_short_trips,
+    SUM(total_amount) FILTER (WHERE trip_distance < 1) 
+        / SUM(total_amount) * 100 AS pct_revenue_from_short_trips
+FROM nyc_taxi;
+```
+
+👉 Urban planning implications.
+
+---
+
+# 📈 12. Long-Term Trend & Seasonality
+
+### ❓ Executive Question:
+
+**Is there monthly seasonality in revenue?**
+
+```sql
+SELECT DATE_TRUNC('month', lpep_pickup_datetime) AS month,
+       SUM(total_amount) AS revenue
+FROM nyc_taxi
+GROUP BY month
+ORDER BY month;
+```
+
+👉 Budget forecasting.
 
 ## Additional Resources
 
